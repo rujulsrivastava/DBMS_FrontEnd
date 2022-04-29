@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>NGO</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+		integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+
+			//let's create arrays
+			var ngo = [
+				{ display: "All", value: "*" },
+				{ display: "Registration ID", value: "reg_no" },
+				{ display: "Name", value: "Name" },
+				{ display: "Address", value: "Address" }];
+
+			var volunteer = [
+				{ display: "All", value: "*" },
+				{ display: "Volunteer ID", value: "vid" },
+				{ display: "Name", value: "name" },
+				{ display: "Phone", value: "phone_no" }];
+
+			//If parent option is changed
+			$("#tables_list").change(function () {
+				var parent = $(this).val(); //get option value from parent 
+
+				switch (parent) { //using switch compare selected option and populate child
+					case 'ngo':
+						list(ngo);
+						break;
+					case 'volunteer':
+						list(volunteer);
+						break;
+					default: //default child option is blank
+						$("#cols_list").html('Tap to select');
+						break;
+				}
+			});
+
+			$("#tables_update").change(function () {
+				var parent = $(this).val(); //get option value from parent 
+
+				switch (parent) { //using switch compare selected option and populate child
+					case 'ngo':
+						list(ngo);
+						break;
+					case 'volunteer':
+						list(volunteer);
+						break;
+					default: //default child option is blank
+						$("#cols_list_update").html('Tap to select');
+						$("#cols_list_update_where").html('Tap to select');
+						break;
+				}
+			});
+
+			
+
+			//function to populate child select box
+			function list(array_list) {
+				$("#cols_list").html(""); //reset child options
+				$(array_list).each(function (i) { //populate child options 
+					$("#cols_list").append("<option value=\"" + array_list[i].value + "\">" + array_list[i].display + "</option>");
+				});
+			}
+
+			function list(array_list) {
+				$("#cols_list_update").html(""); //reset child options
+				$(array_list).each(function (i) { //populate child options 
+					$("#cols_list_update").append("<option value=\"" + array_list[i].value + "\">" + array_list[i].display + "</option>");
+				});
+			}
+
+			function list(array_list) {
+				$("#cols_list_update_where").html(""); //reset child options
+				$(array_list).each(function (i) { //populate child options 
+					$("#cols_list_update_where").append("<option value=\"" + array_list[i].value + "\">" + array_list[i].display + "</option>");
+				});
+			}
+
+		});
+
+
+	</script>
+
+</head>
+
+<body style="background-color: rgba(0,200,200,0.5);">
+	<center>
+		<h1 style="color:aliceblue;">NGO MANAGEMENT SYSTEM</h1>
+		<br>
+			<table border="1pt" class="table table-hover table-dark">
+				<tr>
+					<th scope="col" style="width: 25%">SELECT</th>
+					<th scope="col" style="width: 25%">INSERT</th>
+					<th scope="col" style="width: 25%">DELETE</th>
+					<th scope="col" style="width: 25%">UPDATE</th>
+				</tr>
+				<tr>
+					<td>
+						<form name="selectform" method="post" onsubmit="select.php" action="select.php">
+						<input type="radio" id="r_select" name="select" value="select">
+						<label for="r_select">SELECT?</label></br>
+						<label for="tables_list">From table:</label>
+						<select name="tables_list" id="tables_list" required>
+							<option name="table" value="ngo">NGO</option>
+							<option name="table" value="volunteer">VOLUNTEER</option>
+						</select>
+						<select name="cols_list" id="cols_list">
+						</select>
+						</br><input type="submit" value="select" formaction="select.php" onclick="myFunctionForSelect()">
+						<script>
+							function myFunctionForSelect() {
+								var col = document.getElementById("cols_list").value;
+								var tablename = document.getElementById("tables_list").value;
+								document.getElementById("selectquery").innerHTML = "SELECT " + col + "FROM " + tablename + ";";
+							}
+						</script>
+						<script type="text/javascript" language="javascript">
+							$(function () {
+								$("#tables_list").change(function () {
+									var tab = $('option:selected', this).attr('value');
+									//$('#name').val(studentNmae);
+								});
+							});
+						</script>
+						<p id="selectquery"></p>
+						</form>
+					</td>
+
+					<td>
+						<form name="insertform" method="post" action="insert.php">
+						<input type="radio" id="r_insert" name="insert" value="insert">
+						<label for="r_insert">INSERT </label>
+						<label for="tables_insert">INTO </label>
+						<select name="tables_insert" id="tables_insert" onselect="vals(this)" onchange="vals(this)" required>
+							<option name="table" value="ngo">NGO</option>
+							<option name="table" value="volunteer">VOLUNTEER</option>
+						</select>
+						<script type="text/javascript">
+							function vals(that) {
+								if (that.value == "ngo") {
+									document.getElementById("ngo_values").style.display = "block";
+									document.getElementById("vol_values").style.display = "none";
+								} else {
+									if (that.value=="volunteer") {
+										document.getElementById("vol_values").style.display = "block";
+										document.getElementById("ngo_values").style.display = "none";
+									}
+									else {
+										document.getElementById("ngo_values").style.display = "none";
+										document.getElementById("vol_values").style.display = "none";
+									}
+								}
+							}
+						</script>
+	
+						<div id="ngo_values"style="display: none;">
+							<label for="ngo_reg_no">Registration: </label>
+							<input type="text" id="ngo_reg_no" name="ngo_reg_no" /><br />
+							<label for="ngo_name">Name: </label>
+							<input type="text" id="ngo_name" name="ngo_name" /><br />
+							<label for="ngo_address">Address: </label>
+							<input type="text" id="ngo_address" name="ngo_address" /><br />
+							<label for="ngo_founder">Founder: </label>
+							<input type="text" id="ngo_founder" name="ngo_founder" /><br />
+							<label for="ngo_year">Year: </label>
+							<input type="text" id="ngo_year" name="ngo_year" /><br />
+						</div>
+						<div id="vol_values" style="display: none;">
+							<label for="vol_vid">Volunteer ID: </label>
+							<input type="text" id="vol_vid" name="vol_vid" /><br />
+							<label for="vol_name">Name: </label>
+							<input type="text" id="vol_name" name="vol_name" /><br />
+							<label for="vol_phone">Phone: </label>
+							<input type="number" id="vol_phone" name="vol_phone" /><br />
+							<label for="vol_address">Address: </label>
+							<input type="text" id="vol_address" name="vol_address" /><br />
+							<label for="vol_days">Days of: </label>
+							<input type="number" id="vol_days" name="vol_days" /><br />
+						</div>
+						<input name="insertbutton" type="submit" value="submit" formaction="insert.php">
+					</form>
+					</td>
+
+					<td>
+						<form name="deleteform" method="post" action="delete.php">
+						<input type="radio" id="r_delete" name="delete" value="delete">
+						<label for="r_delete">DELETE?</label><br>
+						<input type="text" name="address" id="Address"></br>
+						<input type="submit" value="delete" formaction="delete.php">
+					</form>
+
+					</td>
+					<td>
+					<form name="updateform" method="post" onsubmit="update.php" action="update.php">
+						<input type="radio" id="r_update" name="update" value="update">
+						<label for="r_update">UPDATE?</label><br>
+						<label for="tables_update">TABLE </label>
+						<select name="tables_update" id="tables_update" required>
+							<option name="table" value="ngo">NGO</option>
+							<option name="table" value="volunteer">VOLUNTEER</option>
+						</select><br>
+						<label for="cols_list_update">SET </label>
+						<select name="cols_list_update" id="cols_list_update">
+						</select><br>
+						<label for="update_value">(value) </label>
+						<input type="text" name="update_value" id="update_value">
+						<label for="cols_list_update">WHERE </label>
+						<select name="cols_list_update_where" id="cols_list_update_where">
+						</select><br>
+						<label for="update_value_where">(where condition) </label>
+						<input type="text" name="update_value_where" id="update_value_where">
+						<script>
+							function myFunctionForUpdate() {
+								var col = document.getElementById("cols_list_update").value;
+								var tablename = document.getElementById("tables_update").value;
+							}
+						</script>
+						<script type="text/javascript" language="javascript">
+							$(function () {
+								$("#tables_list_update").change(function () {
+									var tab = $('option:selected', this).attr('value');								
+								});
+							});
+						</script>
+	
+						</br>
+						<input type="submit" value="update" formaction="update.php">
+						</form>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</center>
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+		integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+		integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>
